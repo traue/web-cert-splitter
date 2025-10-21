@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Divisor de Certificados (PDF + XLSX)</title>
+  <meta name="description" content="Aplicação web para separar certificados em PDF e nomear arquivos a partir de planilha XLSX." />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Libs de terceiros -->
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1>Divisor de Certificados</h1>
+      <p class="subtitle">PDF Splitter ✂️</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>1) Envie os arquivos</h2>
+      <div class="grid two">
+        <div class="uploader">
+          <label for="pdfInput" class="label">PDF com os certificados</label>
+          <input id="pdfInput" type="file" accept="application/pdf" />
+          <p class="help">Um único PDF contendo todos os certificados (na mesma diagramação).</p>
+          <div id="pdfInfo" class="info"></div>
+        </div>
+        <div class="uploader">
+          <label for="xlsxInput" class="label">Planilha XLSX</label>
+          <input id="xlsxInput" type="file" accept=".xlsx,.xls" />
+          <p class="help">Planilha com os nomes (e demais colunas).</p>
+          <div id="xlsxInfo" class="info"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>2) Configurações</h2>
+      <div class="grid two">
+        <div>
+          <label for="pagesPerSplit" class="label">Separar a cada (páginas por certificado)</label>
+          <input id="pagesPerSplit" type="number" min="1" value="1" />
+          <p class="help">Ex.: se cada certificado tem 1 página, use 1. Se tiver 2, use 2.</p>
+        </div>
+        <div>
+          <label for="sheetSelect" class="label">Aba da planilha</label>
+          <select id="sheetSelect" disabled></select>
+
+          <label for="columnSelect" class="label mt">Coluna com os nomes</label>
+          <select id="columnSelect" disabled></select>
+          <p class="help">Escolha qual coluna será usada para nomear os arquivos PDF gerados.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>3) Mapeamento dos certificados → nomes</h2>
+      <p class="help">Geraremos uma linha por certificado. Cada linha tem um seletor com os nomes detectados na planilha (na mesma ordem).</p>
+      <div id="mappingArea" class="mapping"></div>
+    </section>
+
+    <section class="card actions">
+      <button id="buildBtn" class="btn primary" disabled>Separar e baixar ZIP</button>
+      <button id="resetBtn" class="btn muted">Reiniciar</button>
+      <div id="status" class="status"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Desenvolvido por Thiago G. Traue ⦁ <a href="https://github.com/traue/web-cert-splitter">Ver no GitHub</a></p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
