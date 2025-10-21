@@ -10,6 +10,8 @@
   const pagesPerSplit  = byId('pagesPerSplit');
   const sheetSelect    = byId('sheetSelect');
   const columnSelect   = byId('columnSelect');
+  const splitFolders   = byId('splitFolders');
+  const columnFolderSelect = byId('columnFolderSelect');
   const mappingArea    = byId('mappingArea');
   const buildBtn       = byId('buildBtn');
   const resetBtn       = byId('resetBtn');
@@ -26,6 +28,7 @@
   let selectedNameColumn = null;
 
   let mapping = []; // [{index, selectEl}]
+  let selectedFolderColumn = null;
 
   function setStatus(msg, type=''){
     statusEl.textContent = msg;
@@ -95,6 +98,16 @@
     buildMappingPreview();
     maybeEnableBuild();
   });
+  splitFolders.addEventListener('change', ()=>{
+    columnFolderSelect.disabled = !splitFolders.checked;
+    buildMappingPreview();
+    maybeEnableBuild();
+  });
+  columnFolderSelect.addEventListener('change', ()=>{
+    selectedFolderColumn = columnFolderSelect.value || null;
+    buildMappingPreview();
+    maybeEnableBuild();
+  });
   pagesPerSplit.addEventListener('input', ()=>{
     buildMappingPreview();
     maybeEnableBuild();
@@ -126,6 +139,17 @@
     columnSelect.value = selectedNameColumn || '';
     columnSelect.disabled = columns.length === 0;
 
+    // Popular columnFolderSelect
+    columnFolderSelect.innerHTML='';
+    columns.forEach((h)=>{
+      const opt = document.createElement('option');
+      opt.value = h; opt.textContent = h;
+      columnFolderSelect.appendChild(opt);
+    });
+    selectedFolderColumn = columns[1] || columns[0] || null;
+    columnFolderSelect.value = selectedFolderColumn || '';
+    columnFolderSelect.disabled = !splitFolders.checked || columns.length === 0;
+
     xlsxInfo.innerHTML += `<br/><strong>Linhas:</strong> ${rows.length} | <strong>Colunas:</strong> ${columns.length}`;
 
     buildMappingPreview();
@@ -152,13 +176,15 @@
 
     // Opções de nomes (em ordem da planilha)
     const nameOptions = rows.map(r => (selectedNameColumn ? (r[selectedNameColumn] || '') : '') );
+    const folderOptions = rows.map(r => (selectedFolderColumn ? (r[selectedFolderColumn] || '') : '') );
 
     for(let i=0;i<nOut;i++){
       const row = document.createElement('div');
       row.className = 'map-row';
 
       const left = document.createElement('div');
-      left.innerHTML = `<span class="badge">Certificado #${i+1}</span>`;
+      const folderBadge = splitFolders.checked ? `<span class=\"badge\" style=\"margin-left:8px\">Pasta: ${folderOptions[i] || '(raiz)'}<\/span>` : '';
+      left.innerHTML = `<span class=\"badge\">Certificado #${i+1}<\/span>${folderBadge}`;
 
       const right = document.createElement('div');
       const select = document.createElement('select');
@@ -189,8 +215,9 @@
   }
 
   function maybeEnableBuild(){
-    const ok = !!(pdfDoc && computeOutputCount() > 0 && rows.length > 0 && selectedNameColumn);
-    buildBtn.disabled = !ok;
+    const baseOk = !!(pdfDoc && computeOutputCount() > 0 && rows.length > 0 && selectedNameColumn);
+    const folderOk = !splitFolders.checked || !!selectedFolderColumn;
+    buildBtn.disabled = !(baseOk && folderOk);
   }
 
   buildBtn.addEventListener('click', async ()=>{
@@ -211,6 +238,7 @@
       const sanitize = (s)=>s.replace(/[\\/:*?"<>|]+/g,'-').trim() || 'sem-nome';
 
       const zip = new JSZip();
+      const folderValues = rows.map(r => (selectedFolderColumn ? (r[selectedFolderColumn] || '') : ''));
       // Copiar páginas por blocos
       for(let i=0; i<outputCount; i++){
         const start = i * n;
@@ -220,7 +248,12 @@
         pagesToCopy.forEach(p => newPdf.addPage(p));
         const bytes = await newPdf.save();
         const fname = sanitize(filenames[i]) + '.pdf';
-        zip.file(fname, bytes);
+        if(splitFolders.checked){
+          const folderName = sanitize(folderValues[i] || 'sem-pasta');
+          zip.folder(folderName).file(fname, bytes);
+        } else {
+          zip.file(fname, bytes);
+        }
       }
 
       setStatus('Compactando arquivos...');

@@ -16,7 +16,7 @@
   <header class="site-header">
     <div class="container">
       <h1>Divisor de Certificados</h1>
-      <p class="subtitle">PDF Splitter ✂️</p>
+      <p class="subtitle">PDF Cert Splitter ✂️</p>
     </div>
   </header>
 
@@ -33,7 +33,7 @@
         <div class="uploader">
           <label for="xlsxInput" class="label">Planilha XLSX</label>
           <input id="xlsxInput" type="file" accept=".xlsx,.xls" />
-          <p class="help">Planilha com os nomes (e demais colunas).</p>
+          <p class="help">Planilha com os nomes (e demais colunas). O nome normalmente é uma coluna (ex.: Aluno).</p>
           <div id="xlsxInfo" class="info"></div>
         </div>
       </div>
@@ -54,6 +54,14 @@
           <label for="columnSelect" class="label mt">Coluna com os nomes</label>
           <select id="columnSelect" disabled></select>
           <p class="help">Escolha qual coluna será usada para nomear os arquivos PDF gerados.</p>
+
+          <div class="mt" style="display:flex;align-items:center;gap:10px;">
+            <input id="splitFolders" type="checkbox" />
+            <label for="splitFolders" class="label" style="margin:0;">Dividir em pastas</label>
+          </div>
+          <label for="columnFolderSelect" class="label mt">Coluna para nome da pasta</label>
+          <select id="columnFolderSelect" disabled></select>
+          <p class="help">Se marcado, cada certificado irá para a pasta indicada pela linha correspondente da planilha.</p>
         </div>
       </div>
     </section>
