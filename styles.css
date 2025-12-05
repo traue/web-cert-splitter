@@ -145,3 +145,35 @@ input[type="file"]:focus, input[type="number"]:focus, select:focus{
 
 /* Pequenos toques */
 .uploader{display:flex;flex-direction:column}
+
+/* Accordion styles */
+.accordion .accordion-toggle{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  width:100%;
+  background:transparent;
+  border:0;
+  padding:0;
+  font-size:1.25rem;
+  cursor:pointer;
+  text-align:left;
+}
+.accordion .chev{
+  transition:transform .2s ease;
+  margin-left:12px;
+  font-size:1.05rem;
+}
+.accordion .accordion-toggle[aria-expanded="false"] .chev{
+  transform:rotate(-90deg);
+}
+.accordion-panel{
+  overflow:hidden;
+  transition: max-height .25s ease, padding .25s ease;
+  max-height:1000px; /* aberto por padrão */
+  padding-top:12px;
+}
+.accordion .accordion-toggle[aria-expanded="false"] + .accordion-panel{
+  max-height:0;
+  padding-top:0;
+}

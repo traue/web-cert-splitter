@@ -90,3 +90,8 @@ Desenvolvido com ❤️ por **Thiago Traue** — para simplificar o gerenciament
 ## 🗂️ Dividir em pastas
 
 Opcionalmente, você pode marcar **“Dividir em pastas”** e escolher uma **coluna** da planilha que contenha o **nome da pasta** para cada certificado (mapeado linha a linha). Nesse caso, o ZIP final terá subpastas e cada PDF será salvo na pasta correspondente.
+
+
+## 🟢 Demosntração
+
+Disponível aqui: [https://traue.github.io/web-cert-splitter/](https://traue.github.io/web-cert-splitter/)

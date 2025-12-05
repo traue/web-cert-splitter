@@ -44,7 +44,7 @@
       <div class="grid two">
         <div>
           <label for="pagesPerSplit" class="label">Separar a cada (páginas por certificado)</label>
-          <input id="pagesPerSplit" type="number" min="1" value="1" />
+          <input id="pagesPerSplit" type="number" min="1" value="2" />
           <p class="help">Ex.: se cada certificado tem 1 página, use 1. Se tiver 2, use 2.</p>
         </div>
         <div>
@@ -66,10 +66,17 @@
       </div>
     </section>
 
-    <section class="card">
-      <h2>3) Mapeamento dos certificados → nomes</h2>
-      <p class="help">Geraremos uma linha por certificado. Cada linha tem um seletor com os nomes detectados na planilha (na mesma ordem).</p>
-      <div id="mappingArea" class="mapping"></div>
+    <section class="card accordion">
+      <h2>
+        <button class="accordion-toggle" aria-expanded="true" aria-controls="mappingPanel" id="mappingToggle">
+          3) Mapeamento dos certificados → nomes
+          <span class="chev" aria-hidden="true">▾</span>
+        </button>
+      </h2>
+      <div id="mappingPanel" class="accordion-panel" role="region" aria-labelledby="mappingToggle">
+        <p class="help">Geraremos uma linha por certificado. Cada linha tem um seletor com os nomes detectados na planilha (na mesma ordem).</p>
+        <div id="mappingArea" class="mapping"></div>
+      </div>
     </section>
 
     <section class="card actions">

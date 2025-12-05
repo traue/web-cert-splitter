@@ -266,4 +266,39 @@
     }
   });
 
+  // Accordion toggle (mantém compatível com resto do app)
+  (function(){
+    const toggle = document.querySelector('.accordion-toggle');
+    if (!toggle) return;
+
+    const panel = document.getElementById(toggle.getAttribute('aria-controls'));
+
+    function setCollapsed(collapsed){
+      toggle.setAttribute('aria-expanded', String(!collapsed));
+      // adjust max-height via attribute+CSS rules; keep panel accessible
+      if (collapsed){
+        panel.style.maxHeight = '0';
+      } else {
+        panel.style.maxHeight = panel.scrollHeight + 'px';
+      }
+    }
+
+    // initialize (respecta atributo inicial)
+    const initiallyExpanded = toggle.getAttribute('aria-expanded') === 'true';
+    if (!initiallyExpanded) panel.style.maxHeight = '0';
+    else panel.style.maxHeight = panel.scrollHeight + 'px';
+
+    toggle.addEventListener('click', function(){
+      const collapsed = toggle.getAttribute('aria-expanded') === 'true';
+      setCollapsed(collapsed);
+    });
+
+    // recompute height on window resize (para conteúdo dinâmico)
+    window.addEventListener('resize', function(){
+      if (toggle.getAttribute('aria-expanded') === 'true'){
+        panel.style.maxHeight = panel.scrollHeight + 'px';
+      }
+    });
+  })();
+
 })();
